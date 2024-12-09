@@ -89,7 +89,7 @@ jobs:
 
       - name: Hace un commit de los cambios del README
         run: |
-          git config --global user.name "Luisff73"
+          git config --global user.name "luisff73"
           git config --global user.email "jvrluis@hotmail.com"
           git add README.md result.txt
           git commit -m "Actualizando el resultado del test badge"
