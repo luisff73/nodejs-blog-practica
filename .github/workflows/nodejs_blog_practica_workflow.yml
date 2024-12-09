@@ -91,7 +91,7 @@ jobs:
         run: |
           git config --global user.name "luisff73"
           git config --global user.email "jvrluis@hotmail.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GH_PAT1 }}@github.com/luisff73/nodejs-blog-practica.git
+          git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/luisff73/nodejs-blog-practica.git
           git add README.md result.txt
           git commit -m "Actualizando el resultado del test badgeee"
           git push origin HEAD:main
