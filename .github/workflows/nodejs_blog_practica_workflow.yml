@@ -59,7 +59,7 @@ jobs:
         run: cat result.txt
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: cypress-results
           path: result.txt
@@ -72,7 +72,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Retrieve Cypress results
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: cypress-results
           path: . # Descargar en el directorio raíz
@@ -83,7 +83,7 @@ jobs:
           echo "cypress_outcome=$(cat result.txt)" >> $GITHUB_ENV
 
       - name: Add badge to README
-        uses: ./action.yml
+        uses: ./ #action.yml
         with:
           outcome: ${{ steps.generate_output.outputs.cypress_outcome }}
 
