@@ -93,4 +93,4 @@ jobs:
           git config --global user.email "jvrluis@hotmail.com"
           git add README.md result.txt
           git commit -m "Actualizando el resultado del test badge"
-          git push
+          git push https://x-access-token:${GH_PAT}@github.com/luisff73/nodejs-blog-practica.git HEAD:main
