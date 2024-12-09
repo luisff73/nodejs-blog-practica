@@ -91,6 +91,6 @@ jobs:
         run: |
           git config --global user.name "Luisff73"
           git config --global user.email "jvrluis@hotmail.com"
-          git add README.md
+          git add README.md result.txt
           git commit -m "Actualizando el resultado del test badge"
           git push
