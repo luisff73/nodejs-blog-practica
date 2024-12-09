@@ -1,5 +1,4 @@
 const fs = require('fs');
-const exec = require('@actions/exec');
 
 async function run() {
   const outcome = process.env.INPUT_OUTCOME || 'success';
@@ -24,7 +23,7 @@ async function run() {
   fs.writeFileSync(readmePath, updatedContent, 'utf-8');
 }
 
-// run().catch((error) => {
-//   console.error(error);
-//   process.exit(1);
-// });
+run().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
