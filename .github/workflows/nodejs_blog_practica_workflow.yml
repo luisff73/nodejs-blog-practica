@@ -94,3 +94,5 @@ jobs:
           git add .
           git commit -m "Actualizando el resultado del test badgeee"
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
