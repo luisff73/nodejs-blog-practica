@@ -87,18 +87,18 @@ jobs:
         with:
           outcome: ${{ steps.generate_output.outputs.cypress_outcome }}
 
-      - name: Hace un commit de los cambios del READMEs
-        run: |
-          git config --global user.name "luisff73"
-          git config --global user.email "jvrluis@hotmail.com"
-          git add .
-          git commit -m "Actualizando el resultado del test badge"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Hace un commit de los cambios del README
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: README.md
+          author_name: luisff73
+          author_email: jvrluis@hotmail.com
+          message: "Actualizando el resultado del test badge"
+          push: true
+          token: ${{ secrets.README_TOKEN }}
 
   Deploy_job:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: Cypress_job # Depende del Cypress_job
     steps:
       - name: Checkout code
