@@ -96,6 +96,7 @@ jobs:
           message: "Actualizando el resultado del test badge"
           push: true
           github_token: ${{ secrets.README_TOKEN }}
+
   Deploy_job:
     runs-on: ubuntu-24.04
     needs: Cypress_job # Depende del Cypress_job
@@ -110,3 +111,4 @@ jobs:
           vercel-args: "--prod"
           working-directory: ./
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }} # Configura el ID de la organización a secrets
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }} # Configura el ID del proyecto a secrets
