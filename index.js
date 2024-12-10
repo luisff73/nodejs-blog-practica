@@ -1,6 +1,6 @@
-const fs = require("fs");
+const fs = require("fs").promises;
 
-async function run() {
+async function main() {
   const outcome = process.env.INPUT_OUTCOME || "success";
   
   let badge;
@@ -12,18 +12,22 @@ async function run() {
 
   // Agregar el badge al README después de la sección "RESULTAT DELS ÚLTIMS TESTS"
   const readmePath = "./README.md";
-  const readmeContent = fs.readFileSync(readmePath, "utf-8");
-  
-  // Buscar el lugar para insertar el badge
-  const updatedContent = readmeContent.replace(
-    /<!---Start place for the badge-->/g,
-    `<!---Start place for the badge-->\n${badge}`
-  );
-  
-  fs.writeFileSync(readmePath, updatedContent, "utf-8");
+  try {
+    const readmeContent = await fs.readFile(readmePath, "utf-8");
+    
+    // Buscar el lugar para insertar el badge
+    const updatedContent = readmeContent.replace(
+      /<!---Start place for the badge-->/g,
+      `<!---Start place for the badge-->\n${badge}`
+    );
+    
+    await fs.writeFile(readmePath, updatedContent, "utf-8");
+    console.log("Badge added to README.md successfully.");
+  } catch (error) {
+    console.error("Error updating README.md:", error);
+  }
 }
 
-run().catch((error) => {
-  console.error(error);
-  process.exit(1);
+main().catch((error) => {
+  console.error("Error in main function:", error);
 });
