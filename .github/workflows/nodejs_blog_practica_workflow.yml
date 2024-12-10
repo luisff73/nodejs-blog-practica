@@ -92,7 +92,7 @@ jobs:
           git config --global user.name "luisff73"
           git config --global user.email "jvrluis@hotmail.com"
           git add .
-          git commit -m "Actualizando el resultado del test badgeee"
+          git commit -m "Actualizando el resultado del test badge"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
