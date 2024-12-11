@@ -55,9 +55,6 @@ jobs:
           cat result.txt
         shell: bash
 
-      - name: Verify result.txt
-        run: cat result.txt
-
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -81,12 +78,11 @@ jobs:
         id: generate_output
         run: |
           echo "cypress_outcome=$(cat result.txt)" >> $GITHUB_ENV
-          echo "::set-output name=cypress_outcome::$(cat result.txt)"
 
       - name: Add badge to README
         uses: ./ #action.yml
         with:
-          outcome: ${{ steps.generate_output.outputs.cypress_outcome }}
+          outcome: ${{ env.cypress_outcome }}
 
       - name: Hace un commit de los cambios del README
         uses: EndBug/add-and-commit@v9.1.3
