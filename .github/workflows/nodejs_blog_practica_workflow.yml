@@ -109,3 +109,26 @@ jobs:
           working-directory: ./
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }} # Configura el ID de la organización a secrets
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }} # Configura el ID del proyecto a secrets
+
+  Notification_job:
+    runs-on: ubuntu-24.04
+    needs: [linter_job, Cypress_job, Add_badge_job, Deploy_job] # Depende de todos los trabajos anteriores
+    if: always()
+    steps:
+      - name: Send notification email
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.example.com
+          server_port: 587
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "Resultat del workflow executat"
+          to: ${{ secrets.PERSONAL_EMAIL }}
+          from: "GitHub Actions <actions@example.com>"
+          body: |
+            S'ha realitzat un push en la branca main que ha provocat l'execució del workflow nodejs_blog_practica amb els següents resultats:
+
+            - linter_job: ${{ needs.linter_job.result }}
+            - cypress_job: ${{ needs.Cypress_job.result }}
+            - add_badge_job: ${{ needs.Add_badge_job.result }}
+            - deploy_job: ${{ needs.Deploy_job.result }}
