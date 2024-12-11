@@ -4,6 +4,7 @@ Example of nextjs project using Cypress.iosss
 ![Test Failure](https://img.shields.io/badge/test-failure-red)
 ![Test Failure](https://img.shields.io/badge/test-failure-red)
 ![Test Failure](https://img.shields.io/badge/test-failure-red)
+![Test Failure](https://img.shields.io/badge/test-failure-red)
 
 <!---End place for the badge-->
 
