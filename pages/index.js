@@ -5,14 +5,17 @@ export default function Home() {
   return (
     <div className="container">
       <Head>
-        <title>My example app</title>
+        <title>Pagina de ejemplo</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main>
-        <h1 className="title">Read this super page!</h1>
+        <h1 className="title">Mi primera pagina!</h1>
         <p className="description">
-          Get started by editing <code>pages/index.js</code>
+          Pagina perteneciente al ejercicio de workflows de GIT-HUB
+        </p>
+        <p className="description2">
+          Autor: <strong>Luis Ferri</strong>
         </p>
 
         <div className="grid">
