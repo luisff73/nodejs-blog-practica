@@ -4,7 +4,7 @@ inputs:
   outcome:
     description: "Cypress test outcome"
     required: true
-    #default: "success"
+    default: "success"
 
 runs:
   using: "node20"
