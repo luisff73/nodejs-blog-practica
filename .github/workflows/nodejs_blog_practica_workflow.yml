@@ -139,7 +139,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          repository: luisff73/luisff73 # Reemplaza con tu nombre de usuario de GitHub
+          repository: luisff73 # Reemplaza con tu nombre de usuario de GitHub
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate metrics
