@@ -5,6 +5,8 @@ Example of nextjs project using Cypress.iosss
 ![Tested with Cypress](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)
 ![Tested with Cypress](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)
 ![Tested with Cypress](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)
+![Tested with Cypress](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)
+![Tested with Cypress](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)
 ![Test Failure](https://img.shields.io/badge/test-failure-red)
 ![Test Failure](https://img.shields.io/badge/test-failure-red)
 ![Test Failure](https://img.shields.io/badge/test-failure-red)
@@ -46,11 +48,20 @@ Las métricas proporcionan información sobre el rendimiento y la calidad del c�
 ## Documentación del Workflow de GitHub Actions
 
 ### Nombre del Workflow
+```yaml
 name: nodejs_blog_practica
+```
 
 ### Eventos Disparadores del Workflow
+```yaml
 on:
   push:
     branches:
       - main
+```
+Este workflow se ejecuta automáticamente cuando hay un push en la rama
+
+### Jobs que componen el workflow.
+
+## Linter_job
 

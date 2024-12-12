@@ -3,7 +3,7 @@ name: nodejs_blog_practica
 on:
   push:
     branches:
-      - main
+      - mains
 
 jobs:
   linter_job:
@@ -154,6 +154,3 @@ jobs:
           plugin_languages_indepth: yes
           plugin_languages_recent_load: 20
           plugin_languages_recent_days: 14
-
-
-          
