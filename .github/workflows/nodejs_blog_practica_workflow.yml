@@ -136,7 +136,6 @@ jobs:
   update-readme:
     runs-on: ubuntu-24.04
     steps:
-        steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
