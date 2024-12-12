@@ -1,8 +1,10 @@
 const fs = require("fs").promises;
 
 async function main() {
-  const outcome = process.env.INPUT_OUTCOME || "success";
+  const outcome = process.env.INPUT_OUTCOME || "success"; //Obtiene el valor de la variable de entorno INPUT_OUTCOME. Si no está definida, usa "success" como valor predeterminado.
   
+  console.log(`Valor de Outcome: ${outcome}`);
+
   let badge;
   if (outcome === "success") {
     badge = "![Tested with Cypress](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)";
@@ -11,7 +13,7 @@ async function main() {
   }
 
   // Agregar el badge al README después de la sección "RESULTAT DELS ÚLTIMS TESTS"
-  const readmePath = "./README.md";
+  const readmePath = "./README.md"; // Define la ruta al archivo README.md.
   try {
     const readmeContent = await fs.readFile(readmePath, "utf-8");
     
