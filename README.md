@@ -50,7 +50,7 @@ Las métricas proporcionan información sobre el rendimiento y la calidad del c�
 ### Nombre del Workflow
 ```yaml
 name: nodejs_blog_practica
-``
+```
 
 ### Eventos Disparadores del Workflow
 ```yaml
@@ -58,4 +58,5 @@ on:
   push:
     branches:
       - main
+```
 
