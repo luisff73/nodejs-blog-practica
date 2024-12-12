@@ -60,7 +60,7 @@ on:
     branches:
       - main
 ```
-Este workflow se ejecuta automáticamente cuando hay un push en la rama
+Este workflow se ejecuta automáticamente cuando hay un push en la rama main
 
 ### Jobs que componen el workflow.
 
@@ -90,7 +90,7 @@ jobs:
 
       - name: Run linter
         run: npm run lint
-´´´ 
+```
 Checkout code: Descarga el código del repositorio.
 Setup Node.js: Configura Node.js versión 16.
 Clean npm cache: Limpia la caché de npm.
@@ -98,3 +98,176 @@ Set npm registry: Configura el registro de npm.
 Install dependencies: Instala las dependencias del proyecto.
 Run linter: Ejecuta el linter para verificar el código.
 
+
+## Cypress_job
+
+```yaml
+Cypress_job:
+    needs: linter_job
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run start
+          wait-on: "http://localhost:3000"
+          wait-on-timeout: 60
+        continue-on-error: true
+
+      - name: Save Cypress test results
+        run: |
+          echo "Tests de Cypress finalizado" > result.txt
+          ls -l
+          cp cypress/videos/*.mp4 . || true
+          cat result.txt
+        shell: bash
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-results
+          path: result.txt
+```
+Checkout code: Descarga el código del repositorio.
+Install dependencies: Instala las dependencias del proyecto.
+Run Cypress tests: Ejecuta las pruebas de Cypress.
+Save Cypress test results: Guarda los resultados de las pruebas de Cypress en un archivo result.txt.
+Upload artifact: Sube el archivo result.txt como un artefacto.
+
+
+## Add_badge_job
+
+```yaml
+Add_badge_job:
+    needs: Cypress_job
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Retrieve Cypress results
+        uses: actions/download-artifact@v4
+        with:
+          name: cypress-results
+          path: . # Descargar en el directorio raíz
+
+      - name: generate_output
+        id: generate_output
+        run: |
+          echo "cypress_outcome=$(cat result.txt)" >> $GITHUB_ENV
+
+      - name: Add badge to README
+        uses: ./ #action.yml
+        with:
+          outcome: ${{ env.cypress_outcome }}
+
+      - name: Hace un commit de los cambios del README
+        uses: EndBug/add-and-commit@v9.1.3
+        with:
+          add: README.md
+          author_name: luisff73
+          author_email: jvrluis@hotmail.com
+          message: "Actualizando el resultado del test badge"
+          push: true
+          github_token: ${{ secrets.README_TOKEN }}
+```
+Checkout code: Descarga el código del repositorio.
+Retrieve Cypress results: Descarga los resultados de las pruebas de Cypress.
+generate_output: Genera una variable de entorno cypress_outcome con el resultado de las pruebas.
+Add badge to README: Agrega un badge al archivo README.md basado en el resultado de las pruebas.
+Hace un commit de los cambios del README: Hace un commit de los cambios en el archivo README.md y los sube al repositorio.
+
+## Deploy_job:
+
+```yaml
+Deploy_job:
+    runs-on: ubuntu-24.04
+    needs: Cypress_job # Depende del Cypress_job
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }} # Configura el token a secrets
+          vercel-args: "--prod"
+          working-directory: ./
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }} # Configura el ID de la organización a secrets
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }} # Configura el ID del proyecto a secrets
+```
+Checkout code: Descarga el código del repositorio.
+Deploy to Vercel: Despliega la aplicación a Vercel usando el token y los IDs de organización y proyecto configurados en los secretos.
+
+
+## Notificacion_job:
+
+```yaml
+Notification_job:
+    runs-on: ubuntu-24.04
+    needs: [linter_job, Cypress_job, Add_badge_job, Deploy_job] # Depende de todos los trabajos anteriores
+    if: always()
+    steps:
+      - name: Send notification email
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.GMAIL_USERNAME }}
+          password: ${{ secrets.GMAIL_PASSWORD }}
+          subject: "Resultat del workflow executat"
+          to: ${{ secrets.PERSONAL_EMAIL }}
+          from: "GitHub Actions <actions@example.com>"
+          body: |
+            S'ha realitzat un push en la branca main que ha provocat l'execució del workflow nodejs_blog_practica amb els següents resultats:
+
+            - linter_job: ${{ needs.linter_job.result }}
+            - cypress_job: ${{ needs.Cypress_job.result }}
+            - add_badge_job: ${{ needs.Add_badge_job.result }}
+            - deploy_job: ${{ needs.Deploy_job.result }}
+```
+Send notification email: Envía un correo electrónico con los resultados del workflow a una dirección de correo configurada en los secretos.
+
+## update-readme:
+
+```yaml
+update-readme:
+    needs: Add_badge_job
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Generate metrics
+        uses: lowlighter/metrics@latest
+        with:
+          token: ${{ secrets.METRICS_TOKEN }}
+          user: luisff73 # Reemplaza con tu nombre de usuario de GitHub
+          template: classic
+          base: header, activity
+          config_timezone: Europe/Madrid
+          plugin_languages: yes
+          plugin_languages_sections: most-used
+          plugin_languages_indepth: yes
+          plugin_languages_recent_load: 20
+          plugin_languages_recent_days: 14
+```
+
+Checkout repository: Descarga el código del repositorio.
+Generate metrics: Genera métricas para agregarlas posteriormente a nuestro perfil de GITHUB con un link al fichero de estadisticas generado.
+
+## Resumen
+# Este workflow de GitHub Actions realiza las siguientes tareas:
+
+Ejecuta un linter para verificar el código.
+Ejecuta pruebas de Cypress y guarda los resultados.
+Agrega un badge al archivo README.md basado en los resultados de las pruebas.
+Despliega la aplicación a Vercel.
+Envía una notificación por correo electrónico con los resultados del workflow.
+Genera métricas y actualiza el archivo README.md.
