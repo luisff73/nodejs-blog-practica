@@ -12,6 +12,8 @@ async function main() {
     badge = "![Test Failure](https://img.shields.io/badge/test-failure-red)";
   }
 
+  console.log("Valor de Badge:", badge);
+
   // Agregar el badge al README después de la sección "RESULTAT DELS ÚLTIMS TESTS"
   const readmePath = "./README.md"; // Define la ruta al archivo README.md.
   try {
