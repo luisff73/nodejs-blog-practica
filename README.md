@@ -48,7 +48,9 @@ Las métricas proporcionan información sobre el rendimiento y la calidad del c�
 ## Documentación del Workflow de GitHub Actions
 
 ### Nombre del Workflow
+```yaml
 name: nodejs_blog_practica
+``
 
 ### Eventos Disparadores del Workflow
 ```yaml
