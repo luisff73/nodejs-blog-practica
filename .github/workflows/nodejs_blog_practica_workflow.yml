@@ -146,14 +146,13 @@ jobs:
           user: luisff73 # Reemplaza con tu nombre de usuario de GitHub
           template: classic
           base: header, activity
-          #filename: github-metrics.svg
           #repo: metrics
           config_timezone: Europe/Madrid
-          #plugin_languages: yes
-          #plugin_languages_sections: most-used
-          #plugin_languages_indepth: yes
-          #plugin_languages_recent_load: 20
-          #plugin_languages_recent_days: 14
+          plugin_languages: yes
+          plugin_languages_sections: most-used
+          plugin_languages_indepth: yes
+          plugin_languages_recent_load: 20
+          plugin_languages_recent_days: 14
 
       - name: Commit and push changes
         uses: EndBug/add-and-commit@v9.1.3
