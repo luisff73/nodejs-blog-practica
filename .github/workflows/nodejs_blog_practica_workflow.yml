@@ -133,7 +133,7 @@ jobs:
   #           - add_badge_job: ${{ needs.Add_badge_job.result }}
   #           - deploy_job: ${{ needs.Deploy_job.result }}
 
-  update-readme:
+update-readme:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
@@ -148,23 +148,18 @@ jobs:
           base: header, activity, community, repositories, metadata
           config_timezone: Europe/Madrid
           plugin_languages: yes
-          plugin_languages_ignored: sql, c# # aqui se añaden los lenguajes que no se quieren mostrar en las estadisticas
           plugin_languages_skipped: no
           plugin_languages_sections: most-used
           plugin_languages_indepth: yes
-          plugin_languages_recent_load: 20
+          plugin_languages_recent_load: 200
           plugin_languages_recent_days: 14
 
-      # - name: Append metrics to README
-      #   run: |
-      #     sed -i '/<!-- METRICS -->/,/<!-- END METRICS -->/c\<!-- METRICS -->\n![Metrics](./github-metrics.svg)\n<!-- END METRICS -->' README.md
-
-      # - name: Commit and push changes
-      #   uses: EndBug/add-and-commit@v9.1.3
-      #   with:
-      #     message: "Update README with metrics"
-      #     branch: main # La rama donde hay que hacer el commit
-      #     author_name: GitHub Actions
-      #     author_email: actions@github.com
-      #     committer: github-actions[bot]
-      #     token: ${{ secrets.README_TOKEN }}
+      - name: Commit and push changes
+        uses: EndBug/add-and-commit@v9.1.3
+        with:
+          add: README.md
+          message: "Update README with metrics"
+          push: true
+          author_name: GitHub Actions
+          author_email: actions@github.com
+          github_token: ${{ secrets.GITHUB_TOKEN }}
