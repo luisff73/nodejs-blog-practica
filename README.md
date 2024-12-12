@@ -65,3 +65,35 @@ Este workflow se ejecuta automáticamente cuando hay un push en la rama
 
 ## Linter_job
 
+```yaml
+jobs:
+  linter_job:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: Clean npm cache
+        run: npm cache clean --force
+
+      - name: Set npm registry
+        run: npm set registry https://registry.npmjs.org/
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run linter
+        run: npm run lint
+´´´ 
+Checkout code: Descarga el código del repositorio.
+Setup Node.js: Configura Node.js versión 16.
+Clean npm cache: Limpia la caché de npm.
+Set npm registry: Configura el registro de npm.
+Install dependencies: Instala las dependencias del proyecto.
+Run linter: Ejecuta el linter para verificar el código.
+
