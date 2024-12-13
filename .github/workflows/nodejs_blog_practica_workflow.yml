@@ -83,9 +83,9 @@ jobs:
           echo "cypress_outcome=$(cat result.txt)" >> $GITHUB_ENV
 
       - name: Add badge to README
-        uses: ./ #action.yml
+        uses: ./action.yml
         with:
-          outcome: ${{ env.cypress_outcome }}
+          outcome: ${{ steps.generate_output.outputs.cypress_outcome }}
 
       - name: Hace un commit de los cambios del README
         uses: EndBug/add-and-commit@v9.1.3
