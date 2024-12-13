@@ -23,29 +23,35 @@ Example of nextjs project using Cypress.iosss
 En esta práctica, se utilizan varias herramientas y conceptos importantes en el desarrollo y despliegue de aplicaciones web. A continuación, presento una breve introducción a cada uno de estos conceptos que trataremos en esta práctica:
 
 ### GitHub Actions
-GitHub Actions es una plataforma de integración continua y entrega continua (CI/CD) que permite automatizar flujos de trabajo directamente desde el repositorio de GitHub. Con GitHub Actions, se pueden definir *workflows* que se ejecutan en respuesta a eventos específicos, como *commits* y *pull requests*.
+GitHub Actions es una plataforma de integración continua y entrega continua (CI/CD) que permite automatizar flujos de trabajo directamente desde el repositorio de GitHub. Con GitHub Actions, se pueden definir *workflows* que se ejecutan en respuesta a eventos específicos, como *commits* y *pull requests*.  
 
 ### Linter
-Un **linter** es una herramienta que analiza el código fuente para identificar errores de programación, *bugs* y problemas de estilo. En esta práctica, utilizaremos un linter para asegurar la calidad y fiabilidad del código.
+Un **linter** es una herramienta que analiza el código fuente para identificar errores de programación, *bugs* y problemas de estilo. En esta práctica, utilizaremos un linter para asegurar la calidad y fiabilidad del código.  
 
 ### Cypress
-**Cypress** es una herramienta de pruebas *end-to-end* (E2E) para aplicaciones web. Permite escribir y ejecutar pruebas que simulan la interacción del usuario con la aplicación, verificando que todo funcione como se espera.
+**Cypress** es una herramienta de pruebas *end-to-end* (E2E) para aplicaciones web. Permite escribir y ejecutar pruebas que simulan la interacción del usuario con la aplicación, verificando que todo funcione como se espera.  
 
 ### Vercel
-**Vercel** es una plataforma de despliegue para aplicaciones web estáticas. Permite desplegar aplicaciones de manera rápida y sencilla, proporcionando una infraestructura escalable y de alto rendimiento.
+**Vercel** es una plataforma de despliegue para aplicaciones web estáticas. Permite desplegar aplicaciones de manera rápida y sencilla, proporcionando una infraestructura escalable y de alto rendimiento.  
 
 ### Badges
-Los **badges** son insignias que se pueden agregar a los archivos `README.md` para mostrar el estado de las pruebas, la cobertura del código y otros indicadores de calidad del proyecto.
+Los **badges** son insignias que se pueden agregar a los archivos `README.md` para mostrar el estado de las pruebas, la cobertura del código y otros indicadores de calidad del proyecto.  
 
 ### Artefactos
-En el contexto de CI/CD, los artefactos son archivos generados durante la ejecución de un *workflow* que pueden ser almacenados y compartidos. En esta práctica, se utilizan artefactos para guardar los resultados de las pruebas de Cypress.
+En el contexto de CI/CD, los artefactos son archivos generados durante la ejecución de un *workflow* que pueden ser almacenados y compartidos.  
+En esta práctica, se utilizan artefactos para guardar los resultados de las pruebas de Cypress.  
 
 ### Métricas
-Las métricas proporcionan información sobre el rendimiento y la calidad del código. En esta práctica, se generan métricas y se agregan al archivo `README.md` del perfil principal para proporcionar una visión general del proyecto.
+Las métricas proporcionan información sobre el rendimiento y la calidad del código. En esta práctica, se generan métricas y se agregan al archivo `README.md` del perfil principal para proporcionar una visión general del proyecto.  
 
 
 
 ## Documentación del Workflow de GitHub Actions
+
+Una vez descargado el proyecto, crearemos un fichero nodejv_blog_practica_workflow.yml dentro de github/workflows que sera donde  
+almacenaremos todos los jobs que contendra esta practica.
+
+
 
 ### Nombre del Workflow
 ```yaml
@@ -60,7 +66,7 @@ on:
     branches:
       - main
 ```
-Este workflow se ejecuta automáticamente cuando hay un push en la rama main
+Este workflow se ejecuta automáticamente cuando hay un push en la rama main  
 
 ### Jobs que componen el workflow.
 
@@ -91,13 +97,29 @@ jobs:
       - name: Run linter
         run: npm run lint
 ```
-Checkout code: Descarga el código del repositorio.
-Setup Node.js: Configura Node.js versión 16.
-Clean npm cache: Limpia la caché de npm.
-Set npm registry: Configura el registro de npm.
-Install dependencies: Instala las dependencias del proyecto.
-Run linter: Ejecuta el linter para verificar el código.
+# steps que componen el linter job:
 
+Checkout code: Descarga el código del repositorio en el sistema de archivos de la maquina virtual con la accion actions/checkout@v3  
+Setup Node.js: Configura un entorno Node.js en su versión 16.   
+Clean npm cache: Limpia la caché de npm.  
+Set npm registry: Configura el registro de npm.  
+Install dependencies: Instala las dependencias del proyecto.  
+Run linter: Ejecuta el linter para verificar el código.  
+
+Este paso, inicialmente ya nos devuelve errores de codigo, los cuales corregiremos posteriormente.
+![](assets/errores.jpg)
+
+Nos indica que hay errores en el fichero “./pages/api/users/[id].js”, en concreto el uso de comillas simples y el uso de “var” en la declaración de la variable.
+
+Lo arreglamos y volvemos a ejecutar un push origin main.
+![](assets/errores1.jpg)
+
+Vuelve a dar un error, esta vez son comillas simples en el fichero index.js y el orden del default en el switch case.  
+Lo arreglamos y volvemos a ejecutar un push origin main.
+
+![](assets/errores2.jpg)
+
+Ahora ya devuelve un resultado correcto.
 
 ## Cypress_job
 
@@ -112,20 +134,21 @@ Cypress_job:
       - name: Install dependencies
         run: npm install
 
-      - name: Run Cypress tests
-        uses: cypress-io/github-action@v6
-        with:
-          start: npm run start
-          wait-on: "http://localhost:3000"
-          wait-on-timeout: 60
-        continue-on-error: true
+    - name: Run Cypress tests
+      uses: cypress-io/github-action@v6
+      with:
+        start: npm run start
+        wait-on: "http://localhost:3000"
+        wait-on-timeout: 60
+        record: true
+        output-folder: cypress/results
+      continue-on-error: true
 
       - name: Save Cypress test results
         run: |
-          echo "Tests de Cypress finalizado" > result.txt
-          ls -l
+        echo "Resultados de pruebas de Cypress:" > result.txt
+        cat cypress/results/output.json >> result.txt || echo "No se encontraron resultados" >> result.txt
           cp cypress/videos/*.mp4 . || true
-          cat result.txt
         shell: bash
 
       - name: Upload artifact
@@ -134,11 +157,12 @@ Cypress_job:
           name: cypress-results
           path: result.txt
 ```
-Checkout code: Descarga el código del repositorio.
-Install dependencies: Instala las dependencias del proyecto.
-Run Cypress tests: Ejecuta las pruebas de Cypress.
-Save Cypress test results: Guarda los resultados de las pruebas de Cypress en un archivo result.txt.
-Upload artifact: Sube el archivo result.txt como un artefacto.
+Checkout code: Descarga el código del repositorio.  
+Install dependencies: Instala las dependencias del proyecto.  
+Run Cypress tests: Ejecuta las pruebas de Cypress. En este paso tambien indicamos que continue aunque exista algún error.  
+Save Cypress test results: Guarda los resultados de las pruebas de Cypress en un archivo result.txt.  
+Upload artifact: Sube el archivo result.txt como un artefacto.  
+En este paso hemos introducido 
 
 
 ## Add_badge_job
@@ -177,11 +201,11 @@ Add_badge_job:
           push: true
           github_token: ${{ secrets.README_TOKEN }}
 ```
-Checkout code: Descarga el código del repositorio.
-Retrieve Cypress results: Descarga los resultados de las pruebas de Cypress.
-generate_output: Genera una variable de entorno cypress_outcome con el resultado de las pruebas.
-Add badge to README: Agrega un badge al archivo README.md basado en el resultado de las pruebas.
-Hace un commit de los cambios del README: Hace un commit de los cambios en el archivo README.md y los sube al repositorio.
+Checkout code: Descarga el código del repositorio.  
+Retrieve Cypress results: Descarga los resultados de las pruebas de Cypress.  
+generate_output: Genera una variable de entorno cypress_outcome con el resultado de las pruebas.  
+Add badge to README: Agrega un badge al archivo README.md basado en el resultado de las pruebas.  
+Hace un commit de los cambios del README: Hace un commit de los cambios en el archivo README.md y los sube al repositorio.  
 
 ## Deploy_job:
 
@@ -202,7 +226,7 @@ Deploy_job:
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }} # Configura el ID de la organización a secrets
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }} # Configura el ID del proyecto a secrets
 ```
-Checkout code: Descarga el código del repositorio.
+Checkout code: Descarga el código del repositorio.  
 Deploy to Vercel: Despliega la aplicación a Vercel usando el token y los IDs de organización y proyecto configurados en los secretos.
 
 
@@ -259,7 +283,7 @@ update-readme:
           plugin_languages_recent_days: 14
 ```
 
-Checkout repository: Descarga el código del repositorio.
+Checkout repository: Descarga el código del repositorio.  
 Generate metrics: Genera métricas para agregarlas posteriormente a nuestro perfil de GITHUB con un link al fichero de estadisticas generado.
 
 ## Resumen

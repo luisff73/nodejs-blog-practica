@@ -3,7 +3,7 @@ name: nodejs_blog_practica
 on:
   push:
     branches:
-      - mains
+      - main
 
 jobs:
   linter_job:
@@ -45,21 +45,22 @@ jobs:
           start: npm run start
           wait-on: "http://localhost:3000"
           wait-on-timeout: 60
+          record: true
+          output-folder: cypress/results
         continue-on-error: true
-
+  
       - name: Save Cypress test results
         run: |
-          echo "Tests de Cypress finalizado" > result.txt
-          ls -l
-          cp cypress/videos/*.mp4 . || true
-          cat result.txt
-        shell: bash
+         echo "Resultados de pruebas de Cypress:" > result.txt
+         cat cypress/results/output.json >> result.txt || echo "No se encontraron resultados" >> result.txt
+         cp cypress/videos/*.mp4 . || true
+         shell: bash
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: cypress-results
-          path: result.txt
+          path: cypress/results/result.txt
 
   Add_badge_job:
     needs: Cypress_job
@@ -72,7 +73,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: cypress-results
-          path: . # Descargar en el directorio raíz
+          path: ./cypress/results/result.txt # Descargar en el directorio raíz
 
       - name: generate_output
         id: generate_output
