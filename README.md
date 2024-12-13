@@ -1,11 +1,11 @@
-Example of nextjs project using Cypress.iosss
+Example of nextjs project using Cypress.io
 
 <!---Start place for the badge-->
 ![Tested with Cypress](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)
 ![Tested with Cypress](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)
 ![Tested with Cypress](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)
-![Tested with Cypress](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)
-![Tested with Cypress](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)
+![Test Failure](https://img.shields.io/badge/test-failure-red)
+![Test Failure](https://img.shields.io/badge/test-failure-red)
 ![Tested with Cypress](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)
 ![Tested with Cypress](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)
 ![Tested with Cypress](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)
@@ -22,7 +22,8 @@ Example of nextjs project using Cypress.iosss
 # Práctica - GitHub Actions
 
 ## Introducción
-En esta práctica, se utilizan varias herramientas y conceptos importantes en el desarrollo y despliegue de aplicaciones web. A continuación, presento una breve introducción a cada uno de estos conceptos que trataremos en esta práctica:
+En esta práctica, se utilizan varias herramientas y conceptos importantes en el desarrollo y despliegue de aplicaciones web.  
+A continuación, presento una breve introducción a cada uno de estos conceptos que trataremos en esta práctica:
 
 ### GitHub Actions
 GitHub Actions es una plataforma de integración continua y entrega continua (CI/CD) que permite automatizar flujos de trabajo directamente desde el repositorio de GitHub. Con GitHub Actions, se pueden definir *workflows* que se ejecutan en respuesta a eventos específicos, como *commits* y *pull requests*.  
@@ -68,7 +69,7 @@ on:
     branches:
       - main
 ```
-Este workflow se ejecuta automáticamente cuando hay un push en la rama main  
+Este workflow se ejecuta automáticamente cuando hay un push en la rama main.  
 
 ### Jobs que componen el workflow.
 
@@ -99,7 +100,7 @@ jobs:
       - name: Run linter
         run: npm run lint
 ```
-# steps que componen el linter job:
+### steps que componen el linter job:
 
 Checkout code: Descarga el código del repositorio en el sistema de archivos de la maquina virtual con la accion actions/checkout@v3  
 Setup Node.js: Configura un entorno Node.js en su versión 16.   
@@ -108,12 +109,14 @@ Set npm registry: Configura el registro de npm.
 Install dependencies: Instala las dependencias del proyecto.  
 Run linter: Ejecuta el linter para verificar el código.  
 
-Este paso, inicialmente ya nos devuelve errores de codigo, los cuales corregiremos posteriormente.
+Este paso, inicialmente ya nos devuelve errores de codigo, los cuales corregiremos posteriormente.  
+
 ![](assets/errores.jpg)
 
 Nos indica que hay errores en el fichero “./pages/api/users/[id].js”, en concreto el uso de comillas simples y el uso de “var” en la declaración de la variable.
 
-Lo arreglamos y volvemos a ejecutar un push origin main.
+Lo arreglamos y volvemos a ejecutar un push origin main.  
+
 ![](assets/errores1.jpg)
 
 Vuelve a dar un error, esta vez son comillas simples en el fichero index.js y el orden del default en el switch case.  
@@ -194,9 +197,9 @@ Add_badge_job:
           echo "cypress_outcome=$(cat result.txt)" >> $GITHUB_ENV
 
       - name: Add badge to README
-        uses: ./action.yml
+        uses: ./ #action.yml
         with:
-          outcome: ${{ env.cypress_outcome }}
+          outcome: ${{ steps.generate_output.outputs.cypress_outcome }}
 
       - name: Hace un commit de los cambios del README
         uses: EndBug/add-and-commit@v9.1.3
@@ -234,8 +237,14 @@ Deploy_job:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }} # Configura el ID del proyecto a secrets
 ```
 Checkout code: Descarga el código del repositorio.  
-Deploy to Vercel: Despliega la aplicación a Vercel usando el token y los IDs de organización y proyecto configurados en los secretos.
+Deploy to Vercel: Despliega la aplicación a Vercel usando el token y los IDs de organización y proyecto configurados en los secretos.  
+Previamente, en github, en settings, en el apartado de secrets and variables  
+crearemos las secrets con los tokens necesarios de vercel para poder desplegar  
+correctamente nuestra aplicación en vercel.  
+![](assets/errores3.jpg)
 
+Observamos que ya esta disponible en vercel.  
+![](assets/errores4.jpg)
 
 ## Notificacion_job:
 
@@ -263,7 +272,17 @@ Notification_job:
             - add_badge_job: ${{ needs.Add_badge_job.result }}
             - deploy_job: ${{ needs.Deploy_job.result }}
 ```
-Send notification email: Envía un correo electrónico con los resultados del workflow a una dirección de correo configurada en los secretos.
+Send notification email: Envía un correo electrónico con los resultados del workflow a una dirección de correo configurada en los secretos.  
+He añadido el needs [linter_job, Cypress_job, Add_badge_job, Deploy_job] para que dependa de la 
+ejecucion de estos jobs, y así poder recoger el resultado de su ejecución.
+Configuramos los datos del correo.  
+
+En el caso de gmail, he tenido que crear un token para dar permiso a github para que envie correos.  
+
+Por supuesto, tambien hay que crear las secrets con el USERNAME, PASSWORD y PERSONAL_EMAIL  
+Para recoger el estado final de cada job utilizaremos las variables de contexto de github 
+{needs.nombre del job.result}.  
+
 
 ## update-readme:
 
@@ -291,7 +310,14 @@ update-readme:
 ```
 
 Checkout repository: Descarga el código del repositorio.  
-Generate metrics: Genera métricas para agregarlas posteriormente a nuestro perfil de GITHUB con un link al fichero de estadisticas generado.
+Generate metrics: Genera un fichero con la extension svg, con las métricas para agregarlas   posteriormente a nuestro perfil de GITHUB con un link a dicho fichero de estadisticas generado.  
+
+La action lowlighter/metrics@latest dispone de multitud de tests que podemos añadir, yo en este  
+caso he añadido las mas habituales.  
+
+Finalmente podemos ver que cuando hacemos un push se ejecutan todos los jobs satisfactoriamente.  
+
+![](assets/errores5.jpg)
 
 ## Resumen
 # Este workflow de GitHub Actions realiza las siguientes tareas:
