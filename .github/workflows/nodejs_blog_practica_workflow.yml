@@ -49,13 +49,15 @@ jobs:
 
       - name: Save Cypress test results
         run: |
-          if [ $? -eq 0 ]; then echo "success" > result.txt
+          if [ $? -eq 0 ]; then 
+          echo "success" > result.txt
           else
           echo "failure" > result.txt
           ls -l
           cp cypress/videos/*.mp4 . || true
+          fi
           cat result.txt
-        shell: bash
+          shell: bash
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
