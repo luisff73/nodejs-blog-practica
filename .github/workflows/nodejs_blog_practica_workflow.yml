@@ -57,7 +57,6 @@ jobs:
           cp cypress/videos/*.mp4 . || true
           fi
           cat result.txt
-          shell: bash
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
