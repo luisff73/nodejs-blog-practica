@@ -83,7 +83,7 @@ jobs:
           echo "cypress_outcome=$(cat result.txt)" >> $GITHUB_ENV
 
       - name: Add badge to README
-        uses: ./action.yml
+        uses: ./ #action.yml
         with:
           outcome: ${{ steps.generate_output.outputs.cypress_outcome }}
 
