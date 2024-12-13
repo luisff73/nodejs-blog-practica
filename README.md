@@ -115,7 +115,7 @@ Lo arreglamos y volvemos a ejecutar un push origin main.
 ![](assets/errores1.jpg)
 
 Vuelve a dar un error, esta vez son comillas simples en el fichero index.js y el orden del default en el switch case.  
-Lo arreglamos y volvemos a ejecutar un push origin main.
+Lo arreglamos y volvemos a ejecutar un push origin main.  
 
 ![](assets/errores2.jpg)
 
