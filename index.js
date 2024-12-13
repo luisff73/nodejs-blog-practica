@@ -6,7 +6,7 @@ async function main() {
   console.log(`Valor de Outcome: ${outcome}`);
 
   let badge;
-  if (outcome === success") {
+  if (outcome === "success") {
     badge = "![Tested with Cypress](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)";
   } else {
     badge = "![Test Failure](https://img.shields.io/badge/test-failure-red)";
