@@ -63,7 +63,6 @@ name: nodejs_blog_practica
 
 ### Eventos Disparadores del Workflow
 ```yaml
-```yaml
 on:
   push:
     branches:
@@ -310,7 +309,7 @@ update-readme:
 ```
 
 Checkout repository: Descarga el código del repositorio.  
-Generate metrics: Genera un fichero con la extension svg, con las métricas para agregarlas   posteriormente a nuestro perfil de GITHUB con un link a dicho fichero de estadisticas generado.  
+Generate metrics: Genera un fichero con la extension svg, con las métricas para agregarlas  posteriormente a nuestro perfil de GITHUB con un link a dicho fichero de estadisticas generado.  
 
 La action lowlighter/metrics@latest dispone de multitud de tests que podemos añadir, yo en este  
 caso he añadido las mas habituales.  
