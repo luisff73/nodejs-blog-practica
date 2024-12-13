@@ -121,6 +121,7 @@ Lo arreglamos y volvemos a ejecutar un push origin main.
 
 Ahora ya devuelve un resultado correcto.
 
+
 ## Cypress_job
 
 ```yaml
@@ -146,9 +147,12 @@ Cypress_job:
 
       - name: Save Cypress test results
         run: |
-        echo "Resultados de pruebas de Cypress:" > result.txt
-        cat cypress/results/output.json >> result.txt || echo "No se encontraron resultados" >> result.txt
+          if [ $? -eq 0 ]; then echo "success" > result.txt
+          else
+          echo "failure" > result.txt
+          ls -l
           cp cypress/videos/*.mp4 . || true
+          cat result.txt
         shell: bash
 
       - name: Upload artifact
@@ -159,10 +163,11 @@ Cypress_job:
 ```
 Checkout code: Descarga el código del repositorio.  
 Install dependencies: Instala las dependencias del proyecto.  
-Run Cypress tests: Ejecuta las pruebas de Cypress. En este paso tambien indicamos que continue aunque exista algún error.  
+Run Cypress tests: Ejecuta las pruebas de Cypress.  
+En este paso tambien indicamos que continue aunque exista algún error.  
 Save Cypress test results: Guarda los resultados de las pruebas de Cypress en un archivo result.txt.  
 Upload artifact: Sube el archivo result.txt como un artefacto.  
-En este paso hemos introducido 
+
 
 
 ## Add_badge_job
@@ -187,7 +192,7 @@ Add_badge_job:
           echo "cypress_outcome=$(cat result.txt)" >> $GITHUB_ENV
 
       - name: Add badge to README
-        uses: ./ #action.yml
+        uses: ./action.yml
         with:
           outcome: ${{ env.cypress_outcome }}
 
@@ -289,9 +294,9 @@ Generate metrics: Genera métricas para agregarlas posteriormente a nuestro perf
 ## Resumen
 # Este workflow de GitHub Actions realiza las siguientes tareas:
 
-Ejecuta un linter para verificar el código.
-Ejecuta pruebas de Cypress y guarda los resultados.
-Agrega un badge al archivo README.md basado en los resultados de las pruebas.
-Despliega la aplicación a Vercel.
-Envía una notificación por correo electrónico con los resultados del workflow.
-Genera métricas y actualiza el archivo README.md.
+Ejecuta un linter para verificar el código.  
+Ejecuta pruebas de Cypress y guarda los resultados.  
+Agrega un badge al archivo README.md basado en los resultados de las pruebas.  
+Despliega la aplicación a Vercel.  
+Envía una notificación por correo electrónico con los resultados del workflow.  
+Genera métricas y actualiza el archivo README.md del perfil del usuario.  

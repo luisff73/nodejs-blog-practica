@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className="container">
       <Head>
-        <title>Pagina de ejemplo</title>
+        <title>Pagina de ejemplo Luis Ferri</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 

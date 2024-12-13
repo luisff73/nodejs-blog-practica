@@ -49,7 +49,9 @@ jobs:
 
       - name: Save Cypress test results
         run: |
-          echo "Tests de Cypress finalizado" > result.txt
+          if [ $? -eq 0 ]; then echo "success" > result.txt
+          else
+          echo "failure" > result.txt
           ls -l
           cp cypress/videos/*.mp4 . || true
           cat result.txt
